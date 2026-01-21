@@ -36,7 +36,7 @@ export default function AquariumScene() {
   return (
     <div className="absolute inset-0 w-full h-full">
       {/* Aquarium background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 opacity-90" />
+      <div className="absolute inset-0 bg-linear-to-b from-blue-950 via-blue-900 to-blue-800 opacity-90" />
       
       {/* Animated water effect */}
       <svg className="absolute inset-0 w-full h-full opacity-10">
@@ -115,7 +115,7 @@ export default function AquariumScene() {
                 duration: 0.3,
               },
             }}
-            initial={{ delay: fish.delay }}
+            // initial={{ delay: fish.delay }}
             onMouseEnter={() => setHoveredFish(fish.id)}
             onMouseLeave={() => setHoveredFish(null)}
           >
