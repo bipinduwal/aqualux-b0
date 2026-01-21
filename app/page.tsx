@@ -16,12 +16,12 @@ const RippleEffect = dynamic(() => import('@/components/RippleEffect'), {
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* <div className="absolute inset-0 z-10"> */}
+      <div className="absolute inset-0 z-50">
         <Suspense fallback={null}>
           <RippleEffect />
         </Suspense>
-      {/* </div> */}
-      <div className="relative z-20">
+      </div>
+      <div className="relative">
         <Navigation />
       
       {/* Hero Aquarium Section */}

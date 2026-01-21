@@ -60,6 +60,12 @@ export default function Navigation() {
           >
             Contact
           </Link>
+          <Link
+            href="/feed"
+            className="text-foreground hover:text-accent transition-colors"
+          >
+            🐟 Feed
+          </Link>
         </div>
 
         {/* Cart & Menu Toggle */}
@@ -118,6 +124,13 @@ export default function Navigation() {
                 className="text-foreground hover:text-accent transition-colors"
               >
                 Contact
+              </Link>
+              <Link
+                href="/feed"
+                onClick={() => setIsOpen(false)}
+                className="text-foreground hover:text-accent transition-colors"
+              >
+                🐟 Feed
               </Link>
             </div>
           </motion.div>
