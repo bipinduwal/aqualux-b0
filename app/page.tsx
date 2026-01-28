@@ -4,12 +4,15 @@ import { useRef, useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import AquariumScene from '@/components/AquariumScene';
 import Navigation from '@/components/Navigation';
 import { ChevronRight } from 'lucide-react';
 
-// Dynamically import RippleEffect with no SSR
+// Dynamically import components with no SSR (they use browser APIs)
 const RippleEffect = dynamic(() => import('@/components/RippleEffect'), {
+  ssr: false,
+});
+
+const AquariumScene = dynamic(() => import('@/components/AquariumScene'), {
   ssr: false,
 });
 

@@ -23,8 +23,15 @@ const FISH_DATA: Fish[] = [
 export default function AquariumScene() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoveredFish, setHoveredFish] = useState<number | null>(null);
+  const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
+    setWindowHeight(window.innerHeight);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -61,7 +68,7 @@ export default function AquariumScene() {
               height: Math.random() * 20 + 10,
             }}
             animate={{
-              y: [0, -window.innerHeight - 50],
+              y: [0, -(windowHeight + 50)],
               opacity: [0, 0.5, 0],
             }}
             transition={{
