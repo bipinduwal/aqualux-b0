@@ -36,7 +36,7 @@ export default function AquariumScene() {
   return (
     <div className="absolute inset-0 w-full h-full">
       {/* Aquarium background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 opacity-90" />
+      {/* <div className="absolute inset-0 bg-linear-to-b from-blue-950 via-blue-900 to-blue-800 opacity-90" /> */}
       
       {/* Animated water effect */}
       <svg className="absolute inset-0 w-full h-full opacity-10">
@@ -115,7 +115,7 @@ export default function AquariumScene() {
                 duration: 0.3,
               },
             }}
-            initial={{ delay: fish.delay }}
+            // initial={{ delay: fish.delay }}
             onMouseEnter={() => setHoveredFish(fish.id)}
             onMouseLeave={() => setHoveredFish(null)}
           >
@@ -144,19 +144,19 @@ export default function AquariumScene() {
 
       {/* Center branding */}
       <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center z-5"
+        className="absolute inset-0 flex flex-col items-center justify-center "
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
         <motion.h1
-          className="text-5xl md:text-7xl font-light text-accent text-balance text-center"
+          className="text-5xl md:text-7xl font-light text-accent text-balance text-center z-55 "
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity }}
         >
           AquaLux
         </motion.h1>
-        <p className="text-accent/70 mt-4 text-sm tracking-widest">PREMIUM AQUATIC EXPERIENCE</p>
+        <p className="text-accent/70 mt-4 text-sm tracking-widest relative z-55">PREMIUM AQUATIC EXPERIENCE</p>
       </motion.div>
     </div>
   );

@@ -1,16 +1,28 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import AquariumScene from '@/components/AquariumScene';
 import Navigation from '@/components/Navigation';
 import { ChevronRight } from 'lucide-react';
 
+// Dynamically import RippleEffect with no SSR
+const RippleEffect = dynamic(() => import('@/components/RippleEffect'), {
+  ssr: false,
+});
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      <Navigation />
+    <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
+      <div className="absolute inset-0 z-50">
+        <Suspense fallback={null}>
+          <RippleEffect />
+        </Suspense>
+      </div>
+      <div className="relative">
+        <Navigation />
       
       {/* Hero Aquarium Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -85,6 +97,7 @@ export default function Home() {
           <ChevronRight className="w-4 h-4" />
         </Link>
       </section>
+      </div>
     </div>
   );
 }
