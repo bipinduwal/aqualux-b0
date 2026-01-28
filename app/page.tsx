@@ -4,17 +4,23 @@ import { useRef, useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import AquariumScene from '@/components/AquariumScene';
 import Navigation from '@/components/Navigation';
 import { ChevronRight } from 'lucide-react';
 
-// Dynamically import components with no SSR (they use browser APIs)
-const AquariumScene = dynamic(() => import('@/components/AquariumScene'), {
+// Dynamically import RippleEffect with no SSR
+const RippleEffect = dynamic(() => import('@/components/RippleEffect'), {
   ssr: false,
 });
 
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
+      <div className="absolute inset-0 z-50">
+        <Suspense fallback={null}>
+          <RippleEffect />
+        </Suspense>
+      </div>
       <div className="relative">
         <Navigation />
       

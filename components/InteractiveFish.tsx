@@ -169,8 +169,6 @@ function CanvasContent({ clickCount, setClickCount, foods, setFoods, fishRef }: 
   const { scene, gl } = useThree();
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
     // Underwater fog and effects
     scene.fog = new THREE.FogExp2(0x001122, 0.02);
 

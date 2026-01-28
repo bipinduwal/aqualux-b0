@@ -1,143 +1,91 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-interface Ripple {
-  x: number;
-  y: number;
-  radius: number;
-  maxRadius: number;
-  opacity: number;
+declare global {
+  interface Window {
+    $: any;
+    jQuery: any;
+  }
 }
 
 export default function RippleEffect() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const [ripples, setRipples] = useState<Ripple[]>([]);
-  const ripplesRef = useRef<Ripple[]>([]);
-  const animationRef = useRef<number | null>(null);
 
-  // Draw ripples on canvas
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (typeof window === 'undefined') return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      loadScripts();
+    }, 100);
 
-    const draw = () => {
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Update and draw ripples
-      const newRipples = ripplesRef.current.filter((ripple) => ripple.opacity > 0);
-
-      newRipples.forEach((ripple) => {
-        ripple.radius += 3;
-        ripple.opacity = Math.max(0, 1 - ripple.radius / ripple.maxRadius);
-
-        // Draw ripple circle
-        ctx.beginPath();
-        ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(34, 211, 238, ${ripple.opacity * 0.8})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Draw fill
-        ctx.fillStyle = `rgba(34, 211, 238, ${ripple.opacity * 0.15})`;
-        ctx.fill();
-      });
-
-      ripplesRef.current = newRipples;
-
-      if (newRipples.length > 0) {
-        animationRef.current = requestAnimationFrame(draw);
-      }
-    };
-
-    if (ripplesRef.current.length > 0) {
-      animationRef.current = requestAnimationFrame(draw);
-    }
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [ripples]);
-
-  // Set canvas size
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => clearTimeout(timer);
   }, []);
 
-  // Cursor and ripple trigger
+  const loadScripts = () => {
+    if (typeof window === 'undefined') return;
+
+    // Load jQuery
+    if (!window.$) {
+      const jqueryScript = document.createElement('script');
+      jqueryScript.src = 'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js';
+      jqueryScript.onload = loadRipplesLibrary;
+      jqueryScript.onerror = () => console.error('jQuery failed to load');
+      document.head.appendChild(jqueryScript);
+    } else {
+      loadRipplesLibrary();
+    }
+  };
+
+  const loadRipplesLibrary = () => {
+    if (typeof window === 'undefined') return;
+
+    // Check if jQuery is available
+    if (!window.$) {
+      setTimeout(loadRipplesLibrary, 100);
+      return;
+    }
+
+    // Load ripples plugin
+    const ripplesScript = document.createElement('script');
+    ripplesScript.src = 'https://cdn.jsdelivr.net/gh/lolrazh/enhanced-jquery-ripples@main/jquery.ripples.js';
+    ripplesScript.onload = initRipples;
+    ripplesScript.onerror = () => console.error('Ripples plugin failed to load');
+    document.head.appendChild(ripplesScript);
+  };
+
+  const initRipples = () => {
+    if (typeof window === 'undefined') return;
+
+    const $ = window.$;
+    if (!$ || !$.fn.ripples) {
+      console.warn('jQuery or ripples not available, retrying...');
+      setTimeout(initRipples, 200);
+      return;
+    }
+
+    if (containerRef.current) {
+      try {
+        $(containerRef.current).ripples({
+          resolution: 512,
+          dropRadius: 30,
+          perturbance: 0.1,
+          interactive: true,
+        });
+      } catch (err) {
+        console.error('Error initializing ripples:', err);
+      }
+    }
+  };
+
+  // Cursor 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (cursorRef.current) {
         cursorRef.current.style.left = e.clientX + 'px';
         cursorRef.current.style.top = e.clientY + 'px';
-      }
-    };
-
-    const handleClick = (e: MouseEvent) => {
-      const newRipple: Ripple = {
-        x: e.clientX,
-        y: e.clientY,
-        radius: 0,
-        maxRadius: 150,
-        opacity: 1,
-      };
-
-      ripplesRef.current.push(newRipple);
-      setRipples([...ripplesRef.current]);
-
-      if (!animationRef.current) {
-        animationRef.current = requestAnimationFrame(() => {
-          const canvas = canvasRef.current;
-          if (!canvas) return;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return;
-
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          const updatedRipples = ripplesRef.current.filter((ripple) => ripple.opacity > 0);
-
-          updatedRipples.forEach((ripple) => {
-            ripple.radius += 3;
-            ripple.opacity = Math.max(0, 1 - ripple.radius / ripple.maxRadius);
-
-            ctx.beginPath();
-            ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(34, 211, 238, ${ripple.opacity * 0.8})`;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            ctx.fillStyle = `rgba(34, 211, 238, ${ripple.opacity * 0.15})`;
-            ctx.fill();
-          });
-
-          ripplesRef.current = updatedRipples;
-
-          if (updatedRipples.length > 0) {
-            animationRef.current = requestAnimationFrame(() => {});
-          } else {
-            animationRef.current = null;
-          }
-        });
       }
     };
 
@@ -150,38 +98,26 @@ export default function RippleEffect() {
     };
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('click', handleClick);
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('click', handleClick);
       document.removeEventListener('touchmove', handleTouchMove);
     };
   }, []);
 
   return (
     <>
-      {/* Background Container */}
+      {/* Ripple Container - Full screen background with ripple effect */}
       <div
         ref={containerRef}
-        className="fixed inset-0 w-full h-screen pointer-events-none"
+        className="fixed z-10 inset-0 w-full h-screen cursor-none"
         style={{
           backgroundImage: 'url(https://picsum.photos/1920/1080?random=1)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          zIndex: -1,
-          top: 0,
-          left: 0,
-        }}
-      />
-
-      {/* Canvas for ripple effects */}
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-10"
-        style={{
+          zIndex: 0,
           top: 0,
           left: 0,
         }}
