@@ -111,13 +111,13 @@ export default function RippleEffect() {
       {/* Ripple Container - Full screen background with ripple effect */}
       <div
         ref={containerRef}
-        className="fixed z-10 inset-0 w-full h-screen cursor-none"
+        className="fixed inset-0 w-full h-screen pointer-events-none"
         style={{
           backgroundImage: 'url(https://picsum.photos/1920/1080?random=1)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          zIndex: 0,
+          zIndex: -1,
           top: 0,
           left: 0,
         }}

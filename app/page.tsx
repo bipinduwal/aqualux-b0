@@ -8,10 +8,6 @@ import Navigation from '@/components/Navigation';
 import { ChevronRight } from 'lucide-react';
 
 // Dynamically import components with no SSR (they use browser APIs)
-const RippleEffect = dynamic(() => import('@/components/RippleEffect'), {
-  ssr: false,
-});
-
 const AquariumScene = dynamic(() => import('@/components/AquariumScene'), {
   ssr: false,
 });
@@ -19,11 +15,6 @@ const AquariumScene = dynamic(() => import('@/components/AquariumScene'), {
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
-      <div className="absolute inset-0 z-50">
-        <Suspense fallback={null}>
-          <RippleEffect />
-        </Suspense>
-      </div>
       <div className="relative">
         <Navigation />
       
