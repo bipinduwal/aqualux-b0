@@ -80,7 +80,7 @@ export default function RippleEffect() {
     }
   };
 
-  // Cursor tracking
+  // Cursor 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (cursorRef.current) {
